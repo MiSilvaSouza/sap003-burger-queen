@@ -1,0 +1,29 @@
+[debug] [2019-12-12T16:14:44.402Z] ----------------------------------------------------------------------
+[debug] [2019-12-12T16:14:44.406Z] Command:       /usr/bin/node /usr/bin/firebase serve
+[debug] [2019-12-12T16:14:44.406Z] CLI Version:   7.9.0
+[debug] [2019-12-12T16:14:44.406Z] Platform:      linux
+[debug] [2019-12-12T16:14:44.406Z] Node Version:  v8.16.2
+[debug] [2019-12-12T16:14:44.406Z] Time:          Thu Dec 12 2019 13:14:44 GMT-0300 (-03)
+[debug] [2019-12-12T16:14:44.406Z] ----------------------------------------------------------------------
+[debug] [2019-12-12T16:14:44.406Z] 
+[debug] [2019-12-12T16:14:44.424Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-12-12T16:14:44.424Z] > authorizing via signed-in user
+[debug] [2019-12-12T16:14:44.425Z] [iam] checking project burger-queen-56e28 for permissions ["firebase.projects.get"]
+[debug] [2019-12-12T16:14:44.426Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-12-12T16:14:44.426Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-12-12T16:14:45.007Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-12T16:14:45.097Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/burger-queen-56e28:testIamPermissions  
+
+[debug] [2019-12-12T16:14:46.244Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-12T16:14:46.246Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/burger-queen-56e28  
+ 
+[debug] [2019-12-12T16:14:47.880Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/mi/Documentos/sap003-burger-queen'...
+[info] 
+[debug] [2019-12-12T16:14:47.885Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/burger-queen-56e28/webApps/-/config  
+ 
+[debug] [2019-12-12T16:14:49.425Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
