@@ -9,7 +9,7 @@ export default function Input(props) {
       value={props.value}      
       className={props.className}      
       placeholder={props.placeholder}
-      onChange={props.onchange}
+      onChange={props.onChange}
     />
   )
 }
