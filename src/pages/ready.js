@@ -3,16 +3,21 @@ import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import { Link } from 'react-router-dom';
 
-export default function Kitchen() {
+export default function Ready() {
+  const [ready, setReady] = useState([]);
 
-  useEffect(() =>{
-    firebase.firestore().collection('orders').orderBy('timestamp')
+  useEffect(() => {
+    firebase.firestore().collection('orders')
+      .where('status', '==', 'Pronto')
       .get()
       .then((snap) => {
-        console.log(snap)
+        const history = snap.docs.map((item) => ({
+          id: item.id,
+          ...item.data()
+        }))        
+        setReady(history);
       })
-
-  })
+  }, []);
 
   return (
     <div>
@@ -21,7 +26,17 @@ export default function Kitchen() {
         <Link to='/pending' className={css(styles.link, styles.hover)}>Pendentes</Link>
         <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
       </span>
-      
+      <br></br>
+      {ready.map(item =>
+      <section>
+        <hr></hr>
+        <p>{item.client}</p>
+        <p>{item.table}</p>              
+        <p>R$ {item.total},00</p>  
+        <p>{item.status}</p>
+        <p>{item.timestamp.toDate().toLocaleString('pt-BR')}</p>               
+      </section>      
+      )}      
     </div>
   )
 }

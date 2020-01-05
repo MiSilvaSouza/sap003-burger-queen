@@ -2,17 +2,30 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import { Link } from 'react-router-dom';
+import Button from '../components/button';
 
-export default function Kitchen() {
+export default function Pending() {
+  const [peding, setPeding] = useState([]);
 
-  useEffect(() =>{
-    firebase.firestore().collection('orders').orderBy('timestamp')
+  useEffect(() => {
+    firebase.firestore().collection('orders')
+      .where('status', '==', 'Pedido Enviado')
       .get()
       .then((snap) => {
-        console.log(snap)
+        const orderPeding = snap.docs.map((item) => ({
+          id: item.id,
+          ...item.data()
+        }))
+        console.log(orderPeding)       
+        setPeding(orderPeding);
       })
+  }, []);
 
-  })
+  function changeStatus(item) {
+    firebase.firestore().collection('orders').doc(item.id).update({
+      status: 'Pronto'
+    })           
+  }
 
   return (
     <div>
@@ -21,7 +34,18 @@ export default function Kitchen() {
         <Link to='/pending' className={css(styles.link, styles.hover)}>Pendentes</Link>
         <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
       </span>
-      
+      <br></br>
+      {peding.map(item =>
+      <section>
+        <hr></hr>
+        <p>{item.client}</p>
+        <p>{item.table}</p>              
+        <p>R$ {item.total},00</p>  
+        <p>{item.status}</p>
+        <p>{item.timestamp.toDate().toLocaleString('pt-BR')}</p>
+        <Button id={item.id} onClick={() => changeStatus(item)} title={'Pronto'} />       
+      </section>      
+      )}      
     </div>
   )
 }
