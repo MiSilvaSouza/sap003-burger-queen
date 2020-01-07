@@ -7,8 +7,9 @@ import Button from '../components/button';
 
 
  export default function Menu() {
+  const [data, setData] = useState([]);
   const [menu, setMenu] = useState([]);
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState([]);  
   const [total, setTotal] = useState(0);
   const [name, setName] = useState('');
   const [table, setTable] = useState('');
@@ -19,18 +20,40 @@ import Button from '../components/button';
       .then((snap) => {
         const dataMenu = snap.docs.map((item) => ({
           id: item.id,
+          count: 0,
           ...item.data()
         }))
-        setMenu(dataMenu);
+        setData(dataMenu);
       })            
   }, []);
   
-  const menu1 = menu.filter(item => item.breakfast === true);
-  const menu2 = menu.filter(item => item.breakfast === false);
+  const menu1 = data.filter(item => item.category === 'café');
+  const menu2 = data.filter(item => item.category !== 'café');
+  
 
-  function order(event) {
-    setTotal(+(total + event.price));  
-    setOrders([...orders, event]);       
+  function order(item) {
+    if (orders.includes(item) === true) {
+      item.count++;
+      setTotal(+(total + item.price * item.count));
+    } else {
+      item.count = 1;        
+      setOrders([...orders, item]);
+    }
+    setTotal(+(total + item.price));          
+  }
+
+  function deleteItem(item) {
+    if (item.count === 1) {
+      const deleteTotal = total - item.price;
+      const index = orders.indexOf(item);
+      orders.splice(index, 1);
+      setOrders([...orders]);
+      setTotal(deleteTotal);
+    } else {
+      item.count--;
+      const deleteTotal = total - item.price;
+      setTotal(deleteTotal);
+    }            
   }
 
   function sendOrder() {
@@ -39,7 +62,7 @@ import Button from '../components/button';
       table: table,
       order: orders,
       total: total,
-      status: 'Pedido Enviado',
+      status: 'Pendente',
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     }    
     
@@ -48,52 +71,47 @@ import Button from '../components/button';
     setTable('');
     setOrders([]);
     setTotal(0);          
-  }
-
-  function deleteItem(item) {  
-    const deleteTotal = total - item.price;
-    const index = orders.indexOf(item);
-    orders.splice(index, 1);
-    setOrders([...orders]);
-    setTotal(deleteTotal);         
-  }
+  } 
      
 
   return (          
     <div>
-      <form className={css(styles.form)}>
-        <Input type={'text'} value={name} className={css(styles.input)} placeholder={'Cliente'} onChange={(e) => setName(e.target.value)} />
-        <Input type={'text'} value={table} className={css(styles.input)} placeholder={'Mesa'} onChange={(e) => setTable(e.target.value)} />        
-      </form>
-      <br></br>
+      <nav className={css(styles.nav)}>
+        <Button onClick={() => setMenu(menu1)} title={'CAFÉ DA MANHÃ'} className={css(styles.button, styles.hover)}/>
+        <Button onClick={() => setMenu(menu2)} title={'ALMOÇO / JANTA'} className={css(styles.button, styles.hover)}/>
+      </nav>            
       <section className={css(styles.orders)}>
-      <p><strong>Cliente: {name}</strong></p>
-      <p><strong>Mesa: {table}</strong></p>
+        <form className={css(styles.form)}>
+          <Input type={'text'} value={name} className={css(styles.input)} placeholder={'Cliente'} onChange={(e) => setName(e.target.value)} />
+          <Input type={'text'} value={table} className={css(styles.input)} placeholder={'Mesa'} onChange={(e) => setTable(e.target.value)} />        
+        </form>
       <hr></hr>
-      <h1>PEDIDOS</h1>     
+      <h1 className={css(styles.nav)}>PEDIDOS</h1>     
       {orders.map(item =>      
-      <p>R$ {item.price},00 - {item.name} <Button id={orders.id} onClick={() => deleteItem(item)} title={'X'} /></p>                   
+      <p>{item.count} - R$ {item.price},00 - {item.name} <Button id={orders.id} onClick={() => deleteItem(item)} title={'X'} /></p>                   
       )}
       <hr></hr>
       <p><strong>R$ {total},00 - TOTAL</strong></p>
       <br></br>
       <Button onClick={(e) => sendOrder(e)} title={'Enviar'} className={css(styles.card, styles.hover)}/>      
       </section>       
-      <br></br>
-      <h1>CAFÉ DA MANHÃ</h1>
-      {menu1.map(item =>
+      <br></br>      
+      {menu.map(item =>
       <Card name={item.name} price={item.price} className={css(styles.card, styles.hover)} handleClick={() => order(item)} />      
-    )}
-      <br></br>
-      <h1>ALMOÇO / JANTA</h1>
-      {menu2.map(item =>
-      <Card name={item.name} price={item.price} className={css(styles.card, styles.hover)} handleClick={() => order(item)} />      
-    )}                    
+    )}                           
     </div>    
   );
 }
 
 const styles = StyleSheet.create({
+
+  nav: {
+    textAlign: 'center',
+    background: '#3B1910',
+    color: '#EEECE6',
+    display: 'flex',
+    justifyContent: 'center',        
+  },
   
   form: {  
     height: 'auto',
@@ -116,15 +134,16 @@ const styles = StyleSheet.create({
   orders: {
     marginTop: '25px',   
     float: 'right',
-    width: '30%',
+    width: '50%',
     marginRight: '10px',
-    background: 'rgba(59, 25, 16, 0.3)',
+    background: '#D0A991',
        
   },
 
   card: {
     marginTop: '10px', 
     padding: '5px',
+    marginLeft: '10px',
     marginRight: '500px',   
     textAlign: 'center',    
     border: 'none',  
@@ -140,6 +159,19 @@ const styles = StyleSheet.create({
     ':hover': {
         opacity: 0.7,
     }
+},
+
+button: {
+  margin: '10px', 
+  padding: '5px',     
+  textAlign: 'center',    
+  border: 'none',  
+  borderRadius: '5px',
+  cursor: 'pointer',
+  background: '#EEECE6',
+  color: '#3B1910',
+  fontSize: '16px',
+  fontWeight: 'bold', 
 },
    
  /*  media: {
