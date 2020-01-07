@@ -9,7 +9,7 @@ export default function Pending() {
 
   useEffect(() => {
     firebase.firestore().collection('orders')
-      .where('status', '==', 'Pedido Enviado')
+      .where('status', '==', 'Pendente')
       .get()
       .then((snap) => {
         const orderPeding = snap.docs.map((item) => ({
@@ -33,16 +33,23 @@ export default function Pending() {
       <span className={css(styles.pagesOrder, styles.hover)}>
         <Link to='/pending' className={css(styles.link, styles.hover)}>Pendentes</Link>
         <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
+        <Link to='/delivered' className={css(styles.link, styles.hover)}>Entregues</Link>
       </span>
       <br></br>
       {peding.map(item =>
       <section>
         <hr></hr>
-        <p>{item.client}</p>
-        <p>{item.table}</p>              
-        <p>R$ {item.total},00</p>  
-        <p>{item.status}</p>
-        <p>{item.timestamp.toDate().toLocaleString('pt-BR')}</p>
+        <p>Status: {item.status}</p>
+        <p>Cliente: {item.client}</p>
+        <p>Mesa: {item.table}</p>
+        <p>Pedido:</p>
+        {item.order.map(item =>          
+          <ul>            
+            <li>R$ {item.price},00 - {item.name}</li>
+          </ul> 
+        )}              
+        <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
+        <p>Data e Hora: {item.timestamp.toDate().toLocaleString('pt-BR')}</p>
         <Button id={item.id} onClick={() => changeStatus(item)} title={'Pronto'} />       
       </section>      
       )}      
@@ -62,8 +69,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',    
     marginTop: '15px',
-    marginLeft: '280px',
-    marginRight: '280px',
+    marginLeft: '150px',
+    marginRight: '150px',
   },
 
   link: {    

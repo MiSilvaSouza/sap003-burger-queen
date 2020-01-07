@@ -4,6 +4,7 @@ import Menu from './pages/saloon';
 import Kitchen from './pages/kitchen';
 import Pending from './pages/pending';
 import Ready from './pages/ready';
+import Delivered from './pages/delivered';
 import Nav from './components/nav';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './style.css';
@@ -20,7 +21,8 @@ export default function App() {
             <Route path='/saloon' component={Menu} />
             <Route path='/kitchen' component={Kitchen} />
             <Route path='/pending' component={Pending} /> 
-            <Route path='/ready' component={Ready} />                   
+            <Route path='/ready' component={Ready} />
+            <Route path='/delivered' component={Delivered} />                   
           </Switch>  
         </div>
       </Router>

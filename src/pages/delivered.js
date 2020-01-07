@@ -2,29 +2,23 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import { Link } from 'react-router-dom';
-import Button from '../components/button';
 
-export default function Ready() {
-  const [ready, setReady] = useState([]);
+export default function Delivered() {
+  const [delivered, setDelivered] = useState([]);
 
   useEffect(() => {
     firebase.firestore().collection('orders')
-      .where('status', '==', 'Pronto')
+      .where('status', '==', 'Entregue')
       .get()
       .then((snap) => {
         const history = snap.docs.map((item) => ({
           id: item.id,
           ...item.data()
         }))        
-        setReady(history);
+        setDelivered(history);
       })
   }, []);
 
-  function changeStatus(item) {
-    firebase.firestore().collection('orders').doc(item.id).update({
-      status: 'Entregue'
-    })           
-  }
 
   return (
     <div>
@@ -35,7 +29,7 @@ export default function Ready() {
         <Link to='/delivered' className={css(styles.link, styles.hover)}>Entregues</Link>
       </span>
       <br></br>
-      {ready.map(item =>
+      {delivered.map(item =>
       <section>
         <hr></hr>
         <p>Status: {item.status}</p>
@@ -48,8 +42,7 @@ export default function Ready() {
           </ul> 
         )}              
         <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
-        <p>Data e Hora: {item.timestamp.toDate().toLocaleString('pt-BR')}</p>
-        <Button id={item.id} onClick={() => changeStatus(item)} title={'Entregue'} />       
+        <p>Data e Hora: {item.timestamp.toDate().toLocaleString('pt-BR')}</p>             
       </section>      
       )}      
     </div>

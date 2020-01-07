@@ -20,6 +20,7 @@ export default function Kitchen() {
       <span className={css(styles.pagesOrder, styles.hover)}>
         <Link to='/pending' className={css(styles.link, styles.hover)}>Pendentes</Link>
         <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
+        <Link to='/delivered' className={css(styles.link, styles.hover)}>Entregues</Link>
       </span>
       
     </div>
@@ -33,13 +34,12 @@ const styles = StyleSheet.create({
     color: '#EEECE6',
   },
 
-  pagesOrder: {
-    
+  pagesOrder: {    
     display: 'flex',
     justifyContent: 'space-between',    
     marginTop: '15px',
-    marginLeft: '280px',
-    marginRight: '280px',
+    marginLeft: '150px',
+    marginRight: '150px',
   },
 
   link: {    
