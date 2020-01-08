@@ -15,18 +15,19 @@ export default function Pending() {
         const orderPeding = snap.docs.map((item) => ({
           id: item.id,
           ...item.data()
-        }))
-        console.log(orderPeding)       
+        }))           
         setPeding(orderPeding);
       })
   }, []);
 
-  function changeStatus(item) {
-    firebase.firestore().collection('orders').doc(item.id).update({
-      status: 'Pronto'
-    })           
+  function changeStatus(item) {    
+    firebase.firestore().collection('orders').doc(item.id)
+      .update({
+        status: 'Pronto',
+        time2: firebase.firestore.FieldValue.serverTimestamp(),        
+      })              
   }
-
+  
   return (
     <div>
       <h1 className={css(styles.h1)}>PEDIDOS</h1>
@@ -45,11 +46,11 @@ export default function Pending() {
         <p>Pedido:</p>
         {item.order.map(item =>          
           <ul>            
-            <li>R$ {item.price},00 - {item.name}</li>
+            <li>{item.count} - R$ {item.price},00 - {item.name}</li>
           </ul> 
         )}              
         <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
-        <p>Data e Hora: {item.timestamp.toDate().toLocaleString('pt-BR')}</p>
+        <p>Data e Hora: {item.time1.toDate().toLocaleString('pt-BR')}</p>
         <Button id={item.id} onClick={() => changeStatus(item)} title={'Pronto'} />       
       </section>      
       )}      
