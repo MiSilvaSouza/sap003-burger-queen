@@ -63,7 +63,9 @@ import Button from '../components/button';
       order: orders,
       total: total,
       status: 'Pendente',
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      time1: firebase.firestore.FieldValue.serverTimestamp(),
+      time2: firebase.firestore.FieldValue.serverTimestamp(),
+      difftime: 0     
     }    
     
     firebase.firestore().collection('orders').add(orderClient);

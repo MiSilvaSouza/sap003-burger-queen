@@ -21,8 +21,15 @@ export default function Ready() {
   }, []);
 
   function changeStatus(item) {
+    console.log(item)
+    const time2 = new Date(item.time2.toDate().toLocaleString('pt-BR'));
+    const time1 = new Date(item.time1.toDate().toLocaleString('pt-BR'));
+    const difftime = Math.round(((time2.getTime() - time1.getTime()) / 1000) / 60);
+    console.log(difftime)
+
     firebase.firestore().collection('orders').doc(item.id).update({
-      status: 'Entregue'
+      status: 'Entregue',
+      difftime: difftime,
     })           
   }
 
@@ -44,11 +51,11 @@ export default function Ready() {
         <p>Pedido:</p>
         {item.order.map(item =>          
           <ul>            
-            <li>R$ {item.price},00 - {item.name}</li>
+            <li>{item.count} - R$ {item.price},00 - {item.name}</li>
           </ul> 
         )}              
         <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
-        <p>Data e Hora: {item.timestamp.toDate().toLocaleString('pt-BR')}</p>
+        <p>Data e Hora: {item.time2.toDate().toLocaleString('pt-BR')}</p>
         <Button id={item.id} onClick={() => changeStatus(item)} title={'Entregue'} />       
       </section>      
       )}      

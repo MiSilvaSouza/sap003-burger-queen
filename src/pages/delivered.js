@@ -38,11 +38,11 @@ export default function Delivered() {
         <p>Pedido:</p>
         {item.order.map(item =>          
           <ul>            
-            <li>R$ {item.price},00 - {item.name}</li>
+            <li>{item.count} - R$ {item.price},00 - {item.name}</li>
           </ul> 
         )}              
         <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
-        <p>Data e Hora: {item.timestamp.toDate().toLocaleString('pt-BR')}</p>             
+        <p>Tempo de preparo: {item.difftime} minuto(s)</p>            
       </section>      
       )}      
     </div>
