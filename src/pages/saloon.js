@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import Input from '../components/input';
-import Card from '../components/card';
 import Button from '../components/button';
+import MenuCard1 from '../components/menucard1';
+import MenuCard2 from '../components/menucard2';
 
 
  export default function Menu() {
@@ -13,6 +14,10 @@ import Button from '../components/button';
   const [total, setTotal] = useState(0);
   const [name, setName] = useState('');
   const [table, setTable] = useState('');
+  const [option, setOption] = useState('');
+  const [modal, setModal] = useState({status: false});
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);  
 
   useEffect(() => {
     firebase.firestore().collection('menu').orderBy('name')
@@ -29,20 +34,53 @@ import Button from '../components/button';
   
   const menu1 = data.filter(item => item.category === 'café');
   const menu2 = data.filter(item => item.category !== 'café');
-  
 
-  function order(item) {
+  const changeMenu = (elem) => {
+    console.log(elem)
+    if (elem === 'breakfast') {
+      setMenu(menu1);
+      setShow1(true);
+      setShow2(false);     
+    }    
+    else if (elem === 'allday') {
+      setMenu(menu2);
+      setShow1(false);       
+      setShow2(true);
+    } else {
+      setMenu([]);
+      setShow1(false);
+      setShow2(false);
+    }
+  };  
+
+  const order = (item) => {
     if (orders.includes(item) === true) {
       item.count++;
+      console.log('true', orders, item)     
       setTotal(+(total + item.price * item.count));
     } else {
-      item.count = 1;        
+      item.count = 1;
+      console.log('false', orders, item)                 
       setOrders([...orders, item]);
     }
     setTotal(+(total + item.price));          
-  }
+  };
 
-  function deleteItem(item) {
+  const verifyOptions = (item) => {    
+     if (item.option) {      
+      setModal({status: true, item: item});   
+    } else {      
+      order(item);     
+    }        
+  };
+
+  const addOptions = () => {
+    const updateItem = {...modal.item, name: `${modal.item.name} ${option}`}    
+    order(updateItem);
+    setModal({status: false});            
+ };
+
+  const deleteItem = (item) => {
     if (item.count === 1) {
       const deleteTotal = total - item.price;
       const index = orders.indexOf(item);
@@ -54,9 +92,9 @@ import Button from '../components/button';
       const deleteTotal = total - item.price;
       setTotal(deleteTotal);
     }            
-  }
+  };
 
-  function sendOrder() {
+  const sendOrder = () => {
     const orderClient = {
       client: name,
       table: table,
@@ -73,15 +111,15 @@ import Button from '../components/button';
     setTable('');
     setOrders([]);
     setTotal(0);          
-  } 
+  }; 
      
 
   return (          
     <div>
       <nav className={css(styles.nav)}>
-        <Button onClick={() => setMenu(menu1)} title={'CAFÉ DA MANHÃ'} className={css(styles.button, styles.hover)}/>
-        <Button onClick={() => setMenu(menu2)} title={'ALMOÇO / JANTA'} className={css(styles.button, styles.hover)}/>
-      </nav>            
+        <Button onClick={(e) => changeMenu(e.target.value)} value={'breakfast'} title={'CAFÉ DA MANHÃ'} className={css(styles.button, styles.hover)}/>
+        <Button onClick={(e) => changeMenu(e.target.value)} value={'allday'} title={'ALMOÇO / JANTA'} className={css(styles.button, styles.hover)}/>
+      </nav>
       <section className={css(styles.orders)}>
         <form className={css(styles.form)}>
           <Input type={'text'} value={name} className={css(styles.input)} placeholder={'Cliente'} onChange={(e) => setName(e.target.value)} />
@@ -90,20 +128,34 @@ import Button from '../components/button';
       <hr></hr>
       <h1 className={css(styles.nav)}>PEDIDOS</h1>     
       {orders.map(item =>      
-      <p>{item.count} - R$ {item.price},00 - {item.name} <Button id={orders.id} onClick={() => deleteItem(item)} title={'X'} /></p>                   
+      <p>{item.count} - R$ {item.price},00 - {item.name} <Button className={css(styles.delete)} id={orders.id} onClick={() => deleteItem(item)} title={'X'} /></p>                   
       )}
       <hr></hr>
-      <p><strong>R$ {total},00 - TOTAL</strong></p>
-      <br></br>
+      <p><strong>R$ {total},00 - TOTAL</strong></p>          
       <Button onClick={(e) => sendOrder(e)} title={'Enviar'} className={css(styles.card, styles.hover)}/>      
-      </section>       
-      <br></br>      
-      {menu.map(item =>
-      <Card name={item.name} price={item.price} className={css(styles.card, styles.hover)} handleClick={() => order(item)} />      
-    )}                           
+      </section>
+      { modal.status ? (
+        <div className={css(styles.modal)}>
+          <h3>Opções</h3>
+          {modal.item.option.map((elem, index) =>
+            <div key={index} className={css(styles.option)}>
+              <Input type={'radio'} name={'option'} value={elem} onChange={() => setOption(elem)} />
+              <label> {elem} </label>
+            </div>
+          )}
+          <Button onClick={() => addOptions()} title={'Adicionar'} />          
+        </div>        
+      ) : false}
+      { show1 ? (
+        <MenuCard1 className2={css(styles.h3)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>
+      ) : false}
+
+      { show2 ? (
+        <MenuCard2 className2={css(styles.h3)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>
+      ) : false}                                  
     </div>    
   );
-}
+};
 
 const styles = StyleSheet.create({
 
@@ -115,8 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',        
   },
   
-  form: {  
-    height: 'auto',
+  form: {    
     background: '#D0A991',
     padding: '5px',  
   },
@@ -129,24 +180,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: '16px',
     border: 'none',
-    borderRadius: '5px',
-      
+    borderRadius: '5px',      
   },
   
   orders: {
-    marginTop: '25px',   
+    marginTop: '25px',
+    marginRight: '10px',   
     float: 'right',
-    width: '50%',
-    marginRight: '10px',
+    width: '370px',    
     background: '#D0A991',
-       
+    '@media (min-width: 1024px)': {
+      width: '400px',
+      marginRight: '30px',
+    },          
+  },
+
+  h3: {
+    marginTop: '15px',
+    marginLeft: '10px',
   },
 
   card: {
     marginTop: '10px', 
-    padding: '5px',
+    padding: '10px',
     marginLeft: '10px',
-    marginRight: '500px',   
+    marginRight: '550px',   
     textAlign: 'center',    
     border: 'none',  
     borderRadius: '5px',
@@ -154,13 +212,36 @@ const styles = StyleSheet.create({
     background: '#3B1910',
     color: '#EEECE6',
     fontSize: '16px',
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
+    '@media (min-width: 1024px)': {      
+      marginRight: '680px',
+    },   
   },
 
   hover: {
     ':hover': {
         opacity: 0.7,
     }
+},
+
+modal: {
+  marginTop: '20px', 
+  padding: '10px',
+  marginLeft: '10px',
+  marginRight: '550px',      
+  border: 'none',  
+  borderRadius: '5px',  
+  background: '#3B1910',
+  color: '#EEECE6',
+  fontSize: '16px',
+  '@media (min-width: 1024px)': {      
+    marginRight: '680px',
+  },   
+},
+
+option: {   
+  padding: '10px', 
+  fontSize: '18px',   
 },
 
 button: {
@@ -175,10 +256,17 @@ button: {
   fontSize: '16px',
   fontWeight: 'bold', 
 },
-   
- /*  media: {
-      '@media (min-width: 1025px)': {
-          justifyContent: 'space-between',
-      }
-  } */
+
+delete: {  
+  padding: '5px',     
+  textAlign: 'center',    
+  border: 'none',  
+  borderRadius: '5px',
+  cursor: 'pointer',
+  background: '#D0A991',
+  color: '#3B1910',
+  fontSize: '16px',
+  fontWeight: 'bold', 
+},
+
 });
