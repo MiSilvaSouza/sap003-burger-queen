@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import { Link } from 'react-router-dom';
-import Button from '../components/button';
+import PedingCard from '../components/pedingcard';
 
 export default function Pending() {
   const [peding, setPeding] = useState([]);
@@ -35,25 +35,8 @@ export default function Pending() {
         <Link to='/pending' className={css(styles.link, styles.hover)}>Pendentes</Link>
         <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
         <Link to='/delivered' className={css(styles.link, styles.hover)}>Entregues</Link>
-      </span>
-      <br></br>
-      {peding.map(item =>
-      <section>
-        <hr></hr>
-        <p>Status: {item.status}</p>
-        <p>Cliente: {item.client}</p>
-        <p>Mesa: {item.table}</p>
-        <p>Pedido:</p>
-        {item.order.map(item =>          
-          <ul>            
-            <li>{item.count} - R$ {item.price},00 - {item.name}</li>
-          </ul> 
-        )}              
-        <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
-        <p>Data e Hora: {item.time1.toDate().toLocaleString('pt-BR')}</p>
-        <Button id={item.id} onClick={() => changeStatus(item)} title={'Pronto'} />       
-      </section>      
-      )}      
+      </span>      
+      <PedingCard status={peding} onClick={changeStatus} title={'Pronto'}/>          
     </div>
   )
 }
@@ -65,8 +48,7 @@ const styles = StyleSheet.create({
     color: '#EEECE6',
   },
 
-  pagesOrder: {
-    
+  pagesOrder: {    
     display: 'flex',
     justifyContent: 'space-between',    
     marginTop: '15px',
@@ -75,7 +57,6 @@ const styles = StyleSheet.create({
   },
 
   link: {    
-    
     padding: '15px',     
     textAlign: 'center',    
     border: 'none',  
@@ -92,7 +73,5 @@ const styles = StyleSheet.create({
     ':hover': {
         opacity: 0.7,
     }
-},
-   
- 
+}, 
 });

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import { Link } from 'react-router-dom';
+import DeliveredCard from '../components/deliveredcard';
 
 export default function Delivered() {
   const [delivered, setDelivered] = useState([]);
@@ -28,23 +29,7 @@ export default function Delivered() {
         <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
         <Link to='/delivered' className={css(styles.link, styles.hover)}>Entregues</Link>
       </span>
-      <br></br>
-      {delivered.map(item =>
-      <section>
-        <hr></hr>
-        <p>Status: {item.status}</p>
-        <p>Cliente: {item.client}</p>
-        <p>Mesa: {item.table}</p>
-        <p>Pedido:</p>
-        {item.order.map(item =>          
-          <ul>            
-            <li>{item.count} - R$ {item.price},00 - {item.name}</li>
-          </ul> 
-        )}              
-        <p><strong>R$ {item.total},00 - TOTAL</strong></p>        
-        <p>Tempo de preparo: {item.difftime} minuto(s)</p>            
-      </section>      
-      )}      
+      <DeliveredCard status={delivered} />      
     </div>
   )
 }
@@ -56,8 +41,7 @@ const styles = StyleSheet.create({
     color: '#EEECE6',
   },
 
-  pagesOrder: {
-    
+  pagesOrder: {    
     display: 'flex',
     justifyContent: 'space-between',    
     marginTop: '15px',
@@ -66,7 +50,6 @@ const styles = StyleSheet.create({
   },
 
   link: {    
-    
     padding: '15px',     
     textAlign: 'center',    
     border: 'none',  
@@ -83,7 +66,5 @@ const styles = StyleSheet.create({
     ':hover': {
         opacity: 0.7,
     }
-},
-   
- 
+}, 
 });

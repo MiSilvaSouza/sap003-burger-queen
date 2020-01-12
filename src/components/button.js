@@ -4,7 +4,8 @@ export default function Button(props) {
 
   return (
     <button 
-    onClick={props.onClick} 
+    onClick={props.onClick}
+    value={props.value} 
     id={props.id}    
     class={props.className} 
     >{props.title}

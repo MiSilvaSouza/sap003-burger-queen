@@ -1,18 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import firebase from '../utils/firebaseUtils';
 import { Link } from 'react-router-dom';
 
 export default function Kitchen() {
-
-  useEffect(() =>{
-    firebase.firestore().collection('orders').orderBy('timestamp')
-      .get()
-      .then((snap) => {
-        console.log(snap)
-      })
-
-  })
 
   return (
     <div>
@@ -60,7 +50,6 @@ const styles = StyleSheet.create({
     ':hover': {
         opacity: 0.7,
     }
-},
-   
+},   
  
 });
