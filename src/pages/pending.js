@@ -10,9 +10,8 @@ export default function Pending() {
 
   useEffect(() => {
     firebase.firestore().collection('orders')
-      .where('status', '==', 'Pendente')
-      .get()
-      .then((snap) => {
+      .where('status', '==', 'Pendente')     
+      .onSnapshot((snap) => {
         const orderPeding = snap.docs.map((item) => ({
           id: item.id,
           ...item.data()
