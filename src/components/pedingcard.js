@@ -31,9 +31,13 @@ const styles = StyleSheet.create({
 
   main: {
     display: 'flex',
-    justifyContent: 'space-around',
-    margin: '10px',
-    marginRight: '25px',
+    flexDirection: 'row',
+    flexWrap: 'wrap',    
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    padding: '10px',
+    marginLeft: '15px',
+    marginRight: '15px',
   },
 
   button: {

@@ -10,9 +10,8 @@ export default function Ready() {
 
   useEffect(() => {
     firebase.firestore().collection('orders')
-      .where('status', '==', 'Pronto')
-      .get()
-      .then((snap) => {
+      .where('status', '==', 'Pronto')      
+      .onSnapshot((snap) => {
         const history = snap.docs.map((item) => ({
           id: item.id,
           ...item.data()
