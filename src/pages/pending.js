@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import PedingCard from '../components/pedingcard';
 
 export default function Pending() {
+  
   const [peding, setPeding] = useState([]);
 
   useEffect(() => {
@@ -20,13 +21,13 @@ export default function Pending() {
       })
   }, []);
 
-  function changeStatus(item) {    
+  const changeStatus = (item) => {    
     firebase.firestore().collection('orders').doc(item.id)
       .update({
         status: 'Pronto',
         time2: firebase.firestore.FieldValue.serverTimestamp(),        
-      })              
-  }
+      })                    
+  };
   
   return (
     <div>
@@ -39,7 +40,7 @@ export default function Pending() {
       <PedingCard status={peding} onClick={changeStatus} title={'Pronto'}/>          
     </div>
   )
-}
+};
 
 const styles = StyleSheet.create({
   h1: {
