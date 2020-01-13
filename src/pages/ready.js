@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import ReadyCard from '../components/readycard';
 
 export default function Ready() {
+  
   const [ready, setReady] = useState([]);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function Ready() {
       })
   }, []);
 
-  function changeStatus(item) {  
+  const changeStatus = (item) => {  
     const time2 = new Date(item.time2.toDate().toLocaleString('pt-BR'));
     const time1 = new Date(item.time1.toDate().toLocaleString('pt-BR'));
     const difftime = Math.round(((time2.getTime() - time1.getTime()) / 1000) / 60);   
@@ -29,7 +30,7 @@ export default function Ready() {
       status: 'Entregue',
       difftime: difftime,
     })           
-  }
+  };
 
   return (
     <div>
@@ -42,7 +43,7 @@ export default function Ready() {
       <ReadyCard status={ready} onClick={changeStatus} title={'Entregue'}/>      
     </div>
   )
-}
+};
 
 const styles = StyleSheet.create({
   h1: {
@@ -51,8 +52,7 @@ const styles = StyleSheet.create({
     color: '#EEECE6',
   },
 
-  pagesOrder: {
-    
+  pagesOrder: {    
     display: 'flex',
     justifyContent: 'space-between',    
     marginTop: '15px',
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
   },
 
   link: {    
-    
     padding: '15px',     
     textAlign: 'center',    
     border: 'none',  
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
     ':hover': {
         opacity: 0.7,
     }
-},
-   
+},   
  
 });

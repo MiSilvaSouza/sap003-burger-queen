@@ -36,7 +36,7 @@ import MenuCard2 from '../components/menucard2';
   const menu2 = data.filter(item => item.category !== 'café');
 
   const changeMenu = (elem) => {
-    console.log(elem)
+    
     if (elem === 'breakfast') {
       setMenu(menu1);
       setShow1(true);

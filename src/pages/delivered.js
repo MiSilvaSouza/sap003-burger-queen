@@ -32,7 +32,7 @@ export default function Delivered() {
       <DeliveredCard status={delivered} />      
     </div>
   )
-}
+};
 
 const styles = StyleSheet.create({
   h1: {
