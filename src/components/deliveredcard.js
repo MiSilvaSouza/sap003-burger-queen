@@ -28,11 +28,14 @@ export default function DeliveredCard (props) {
 const styles = StyleSheet.create({
 
   main: {
-    display: 'flex',    
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',    
     justifyContent: 'space-between',
+    alignItems: 'stretch',
     padding: '10px',
-    margin: '10px',
-    marginRight: '25px',
+    marginLeft: '15px',
+    marginRight: '15px',
   },
 
   card: {
