@@ -54,16 +54,17 @@ import MenuCard2 from '../components/menucard2';
   };  
 
   const order = (item) => {
-    if (orders.includes(item) === true) {
-      item.count++;
-      console.log('true', orders, item)     
+
+    const index = orders.findIndex((e) => e.name === item.name);    
+    
+    if (index === -1) {           
+      setOrders([...orders, {...item, count: 1}]);
+
+    } else {       
+      orders[index].count++;   
       setTotal(+(total + item.price * item.count));
-    } else {
-      item.count = 1;
-      console.log('false', orders, item)                 
-      setOrders([...orders, item]);
     }
-    setTotal(+(total + item.price));          
+    setTotal(+(total + item.price));           
   };
 
   const verifyOptions = (item) => {    
