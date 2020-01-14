@@ -5,7 +5,7 @@ export default function MenuCard2 (props) {
 
   return (
     <div>
-      <h3 class={props.className2}>Hambúrgueres</h3>
+      <h3 className={props.className2}>Hambúrgueres</h3>
         <section>      
           {props.menu.map((item) => item.category === 'almoço-janta' ?
             <div> 
@@ -13,7 +13,7 @@ export default function MenuCard2 (props) {
             </div> : false)}             
         </section>
 
-      <h3 class={props.className2}>Acompanhamento</h3>
+      <h3 className={props.className2}>Acompanhamento</h3>
         <section>      
           {props.menu.map((item) => item.category === 'acompanhamento' ?
             <div> 
@@ -21,7 +21,7 @@ export default function MenuCard2 (props) {
             </div> : false)}             
         </section>
 
-      <h3 class={props.className2}>Extras</h3>
+      <h3 className={props.className2}>Extras</h3>
         <section>      
           {props.menu.map((item) => item.category === 'adicional' ?
             <div> 
@@ -29,7 +29,7 @@ export default function MenuCard2 (props) {
             </div> : false)}             
         </section> 
 
-      <h3 class={props.className2}>Bebidas</h3>
+      <h3 className={props.className2}>Bebidas</h3>
         <section>      
           {props.menu.map((item) => item.category === 'bebida' ?
             <div> 

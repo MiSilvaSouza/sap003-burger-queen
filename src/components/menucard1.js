@@ -5,7 +5,7 @@ export default function MenuCard1 (props) {
 
   return (
     <div>
-      <h3 class={props.className2}>Café da Manhã</h3>     
+      <h3 className={props.className2}>Café da Manhã</h3>     
         <section>      
           {props.menu.map((item) => 
             <div> 
