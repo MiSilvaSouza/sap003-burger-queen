@@ -24,6 +24,21 @@ Quando o pedido for entregue o status será mudado para entregue e todos os pedi
 
 ## 3. Interface
 
+  INTERFACE SALÃO
+
+![Saloon1](https://raw.githubusercontent.com/MiSilvaSouza/sap003-burger-queen/master/public/imagens/Captura%20de%20tela%20de%202020-01-14%2017-19-14.png)
+
+![Saloon2](https://raw.githubusercontent.com/MiSilvaSouza/sap003-burger-queen/master/public/imagens/Captura%20de%20tela%20de%202020-01-14%2017-19-43.png)
+
+ INTERFACE COZINHA
+
+![Pending](https://raw.githubusercontent.com/MiSilvaSouza/sap003-burger-queen/master/public/imagens/Captura%20de%20tela%20de%202020-01-14%2017-20-37.png)
+
+![Ready](https://raw.githubusercontent.com/MiSilvaSouza/sap003-burger-queen/master/public/imagens/Captura%20de%20tela%20de%202020-01-14%2017-21-07.png)
+
+![Delivered](https://raw.githubusercontent.com/MiSilvaSouza/sap003-burger-queen/master/public/imagens/Captura%20de%20tela%20de%202020-01-14%2017-21-34.png)
+
+
 
  
 ## 4. Tecnologias Utilizadas
