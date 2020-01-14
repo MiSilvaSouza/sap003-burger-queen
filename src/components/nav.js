@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     margin: '0',
     padding: '0',
     listStyle: 'none',
-    overflow: 'hidden',  
+    overflow: 'hidden',     
   },
   
   li: {  
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: '16px',
     textDecoration: 'none',
+    fontWeight: 'bold',
   },
 
   hover: {

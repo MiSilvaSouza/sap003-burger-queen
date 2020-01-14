@@ -35,9 +35,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',    
     justifyContent: 'space-between',
     alignItems: 'stretch',
-    padding: '10px',
-    marginLeft: '15px',
-    marginRight: '15px',
+    padding: '10px',    
   },
 
   button: {
@@ -65,9 +63,6 @@ const styles = StyleSheet.create({
     borderRadius: '5px',   
     background: '#D0A991',    
     fontSize: '16px',    
-    '@media (min-width: 1024px)': {      
-      marginRight: '680px',
-    },   
   },
 
   list: {
