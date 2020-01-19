@@ -3,8 +3,7 @@ import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
 import Input from '../components/input';
 import Button from '../components/button';
-import MenuCard1 from '../components/menucard1';
-import MenuCard2 from '../components/menucard2';
+import MenuCard from '../components/menucard';
 import growl from 'growl-alert';
 import 'growl-alert/dist/growl-alert.css';
 
@@ -18,9 +17,11 @@ import 'growl-alert/dist/growl-alert.css';
   const [table, setTable] = useState('');
   const [option, setOption] = useState('');
   const [modal, setModal] = useState({status: false});
-  const [show1, setShow1] = useState(false);
-  const [show2, setShow2] = useState(false);  
-
+  
+  useEffect(() => {
+    setMenu([...breakfast]);            
+  }, [data]);
+  
   useEffect(() => {
     firebase.firestore().collection('menu').orderBy('name')
       .get()
@@ -34,26 +35,9 @@ import 'growl-alert/dist/growl-alert.css';
       })            
   }, []);
   
-  const menu1 = data.filter(item => item.category === 'café');
-  const menu2 = data.filter(item => item.category !== 'café');
-
-  const changeMenu = (elem) => {
-    
-    if (elem === 'breakfast') {
-      setMenu(menu1);
-      setShow1(true);
-      setShow2(false);     
-    }    
-    else if (elem === 'allday') {
-      setMenu(menu2);
-      setShow1(false);       
-      setShow2(true);
-    } else {
-      setMenu([]);
-      setShow1(false);
-      setShow2(false);
-    }
-  };  
+  const breakfast = data.filter(item => item.category === 'café');
+  const allday = data.filter(item => item.category !== 'café');
+ 
 
   const order = (item) => {
 
@@ -85,23 +69,27 @@ import 'growl-alert/dist/growl-alert.css';
 
   const deleteItem = (item) => {
     if (item.count === 1) {
-      const deleteTotal = total - item.price;
-      const index = orders.indexOf(item);
-      orders.splice(index, 1);
-      setOrders([...orders]);
-      setTotal(deleteTotal);
+      const filterItens = orders.filter(elem => elem !== item); 
+      setOrders([...filterItens]);
+      setTotal(total - item.price);
     } else {
-      item.count--;
-      const deleteTotal = total - item.price;
-      setTotal(deleteTotal);
+      item.count--;     
+      setTotal(total - item.price);
     }            
   };
 
   const sendOrder = () => {
-    if (name === '' || table === '') {
-      growl.error({text: 'Coloque o nome e mesa do cliente', fadeAway: true, fadeAwayTimeout: 3000});
 
-    } else {
+    if (name === '') {
+      growl.error({text: 'Informe o nome do cliente', fadeAway: true, fadeAwayTimeout: 3000});
+    }
+    else if (table === '') {
+      growl.error({text: 'Informe o número da mesa', fadeAway: true, fadeAwayTimeout: 3000});      
+    }
+    else if (!orders.length) {
+      growl.error({text: 'Escolha um item', fadeAway: true, fadeAwayTimeout: 3000});
+    } 
+    else {
       const orderClient = {
         client: name,
         table: table,
@@ -119,32 +107,19 @@ import 'growl-alert/dist/growl-alert.css';
       setTable('');
       setOrders([]);
       setTotal(0); 
-    }
+    } 
   }; 
      
 
   return (          
     <div>
+      <h1 className={css(styles.h1)}>CARDÁPIO</h1>
       <nav className={css(styles.nav)}>
-        <Button onClick={(e) => changeMenu(e.target.value)} value={'breakfast'} title={'CAFÉ DA MANHÃ'} className={css(styles.button, styles.hover)}/>
-        <Button onClick={(e) => changeMenu(e.target.value)} value={'allday'} title={'ALMOÇO / JANTA'} className={css(styles.button, styles.hover)}/>
-      </nav>
+        <Button onClick={() => setMenu(breakfast)} value={'breakfast'} title={'CAFÉ DA MANHÃ'} />
+        <Button onClick={() => setMenu(allday)} value={'allday'} title={'ALMOÇO / JANTA'} />
+      </nav>     
       <div className={css(styles.main)}>
-        <section className={css(styles.orders)}>
-          <form className={css(styles.form)}>
-            <Input type={'text'} value={name} className={css(styles.input)} placeholder={'Cliente'} onChange={(e) => setName(e.target.value)} />
-            <Input type={'text'} value={table} className={css(styles.input)} placeholder={'Mesa'} onChange={(e) => setTable(e.target.value)} />        
-          </form>
-        <hr></hr>
-        <h1 className={css(styles.nav)}>PEDIDOS</h1>     
-        {orders.map(item =>      
-        <p>{item.count} - R$ {item.price},00 - {item.name} <Button className={css(styles.delete)} id={orders.id} onClick={() => deleteItem(item)} title={'X'} /></p>                   
-        )}
-        <hr></hr>
-        <p><strong>R$ {total},00 - TOTAL</strong></p>          
-        <Button onClick={(e) => sendOrder(e)} title={'Enviar'} className={css(styles.button, styles.hover)} />      
-        </section>
-
+       <MenuCard class={css(styles.h3)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>   
         { modal.status ? (
         <div className={css(styles.modal)}>
           <h3>Opções</h3>
@@ -156,18 +131,21 @@ import 'growl-alert/dist/growl-alert.css';
           )}
           <Button onClick={() => addOptions()} title={'Adicionar'} className={css(styles.button, styles.hover)} />          
         </div>        
-      ) : false}
-      <div>
-        { show1 ? (
-          <MenuCard1 className2={css(styles.h3)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>
         ) : false}
-
-        { show2 ? (
-          <MenuCard2 className2={css(styles.h3)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>
-        ) : false}
-      </div>
-      
-      </div>
+        <aside className={css(styles.orders)}>
+          <form className={css(styles.form)}>
+            <Input type={'text'} value={name} className={css(styles.input)} placeholder={'Cliente'} onChange={(e) => setName(e.target.value)} />
+            <Input type={'text'} value={table} className={css(styles.input)} placeholder={'Mesa'} onChange={(e) => setTable(e.target.value)} />        
+          </form>        
+          <h1 className={css(styles.h1)}>PEDIDOS</h1>     
+          {orders.map(item =>      
+          <p>{item.count} - R$ {item.price},00 - {item.name} <Button className={css(styles.delete)} id={orders.id} onClick={() => deleteItem(item)} title={'X'} /></p>                   
+          )}
+          <hr></hr>
+          <p><strong>R$ {total},00 - TOTAL</strong></p>          
+          <Button onClick={(e) => sendOrder(e)} title={'Enviar'} className={css(styles.button, styles.hover)} />      
+        </aside>           
+      </div>     
     </div>    
   );
 };
@@ -175,27 +153,31 @@ import 'growl-alert/dist/growl-alert.css';
 const styles = StyleSheet.create({
 
   main: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between'
-
+    display: 'flex',    
+    justifyContent:'space-around',
   },
 
   nav: {
+    display: 'flex',
+    justifyContent:'space-between',
+    marginRight: '160px',
+    marginLeft: '160px', 
+  },
+
+  h1: {
     textAlign: 'center',
     background: '#3B1910',
     color: '#EEECE6',
-    display: 'flex',
-    justifyContent: 'center',        
+    padding: '10px',
   },
   
   form: {    
     background: '#D0A991',
-    padding: '5px',  
+    padding: '0 20px 20px 20px',  
   },
   
   input: {
-    margin: '2px auto', 
+    margin: '20px 2px auto', 
     padding: '5px',
     display: 'flex',
     justifyContent: 'center',
@@ -206,30 +188,28 @@ const styles = StyleSheet.create({
   },
   
   orders: {
-    marginTop: '25px',
-    marginRight: '85px',
-    marginLeft: '10px',  
+    marginTop: '60px',        
     background: '#D0A991',
-    height: '50%',         
+    height: '50%',
+    border: '2px solid #3B1910'         
   },
 
   h3: {
     marginTop: '25px',
-    marginLeft: '100px',
+    marginLeft: '10px',
   },
 
   card: {    
+    width: '210px',    
     marginTop: '10px', 
-    padding: '10px',
-    marginRight: '10px',
-    marginLeft: '85px',     
+    padding: '30px',      
     textAlign: 'center',    
     border: 'none',  
     borderRadius: '5px',
     cursor: 'pointer',
     background: '#3B1910',
     color: '#EEECE6',
-    fontSize: '16px',
+    fontSize: '20px',
     fontWeight: 'bold',     
   },
 
@@ -240,7 +220,7 @@ const styles = StyleSheet.create({
 },
 
 modal: {
-  marginTop: '25px', 
+  marginTop: '60px', 
   padding: '10px',
   marginRight: '10px',
   marginLeft: '10px',     
@@ -259,7 +239,7 @@ option: {
 
 button: {
   margin: '10px', 
-  padding: '5px',     
+  padding: '15px',     
   textAlign: 'center',    
   border: 'none',  
   borderRadius: '5px',
@@ -267,7 +247,8 @@ button: {
   background: '#EEECE6',
   color: '#3B1910',
   fontSize: '16px',
-  fontWeight: 'bold', 
+  fontWeight: 'bold',
+  boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)' 
 },
 
 delete: {  
@@ -281,5 +262,4 @@ delete: {
   fontSize: '16px',
   fontWeight: 'bold', 
 },
-
 });

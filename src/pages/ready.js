@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, css } from 'aphrodite';
 import firebase from '../utils/firebaseUtils';
-import { Link } from 'react-router-dom';
-import ReadyCard from '../components/readycard';
+import KitchenCard from '../components/kitchencard';
+import NavKitchen from '../components/navkitchen';
 
 export default function Ready() {
   
@@ -32,50 +31,9 @@ export default function Ready() {
   };
 
   return (
-    <div>
-      <h1 className={css(styles.h1)}>PEDIDOS</h1>
-      <span className={css(styles.pagesOrder, styles.hover)}>
-        <Link to='/pending' className={css(styles.link, styles.hover)}>Pendentes</Link>
-        <Link to='/ready' className={css(styles.link, styles.hover)}>Prontos</Link>
-        <Link to='/delivered' className={css(styles.link, styles.hover)}>Entregues</Link>
-      </span>
-      <ReadyCard status={ready} onClick={changeStatus} title={'Entregue'}/>      
+    <div>      
+      <NavKitchen />
+      <KitchenCard status={ready} onClick={changeStatus} title={'Entregue'}/>      
     </div>
   )
 };
-
-const styles = StyleSheet.create({
-  h1: {
-    textAlign: 'center',
-    background: '#3B1910',
-    color: '#EEECE6',
-  },
-
-  pagesOrder: {    
-    display: 'flex',
-    justifyContent: 'space-between',    
-    marginTop: '15px',
-    marginLeft: '150px',
-    marginRight: '150px',
-  },
-
-  link: {    
-    padding: '15px',     
-    textAlign: 'center',    
-    border: 'none',  
-    borderRadius: '5px',
-    cursor: 'pointer',
-    background: '#3B1910',
-    color: '#EEECE6',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    textDecoration: 'none', 
-  },
-
-  hover: {
-    ':hover': {
-        opacity: 0.7,
-    }
-},   
- 
-});

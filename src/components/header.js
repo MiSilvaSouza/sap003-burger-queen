@@ -1,13 +1,12 @@
 import React from 'react';
-import logo from './logo.png';
 import { StyleSheet, css } from 'aphrodite';
 
-export default function Header () {
+export default function Header (props) {
   return (
     <header className={css(styles.header)}>
-      <img src={logo} className={css(styles.logo)} alt='logo'/>
-      <h1>Burger Queen</h1>
-      <img src={logo} className={css(styles.logo)} alt='logo'/>
+      <img src={props.img} className={props.className || css(styles.logo)} alt={props.alt} />
+      <h1>{props.title}</h1>
+      <img src={props.img} className={props.className || css(styles.logo)} alt={props.alt} />
     </header>
   )
 };
@@ -29,5 +28,5 @@ const styles = StyleSheet.create({
     padding: '20px',
   },
 
-})
+});
 
