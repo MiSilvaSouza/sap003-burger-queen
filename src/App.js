@@ -2,7 +2,6 @@ import React from 'react';
 import Header from './components/header';
 import Menu from './pages/saloon';
 import Kitchen from './pages/kitchen';
-import Pending from './pages/pending';
 import Ready from './pages/ready';
 import Delivered from './pages/delivered';
 import Nav from './components/nav';
@@ -13,20 +12,17 @@ import './style.css';
 export default function App() {
   return (
     <div className='App'>
-      <Header />      
+      <Header img={'imagens/logo.png'} alt={'logo'} title={'BURGER QUEEN'}/>      
       <Router>
-        <Nav />  
-        <div>              
+        <Nav />                    
           <Switch>
             <Route path='/saloon' component={Menu} />
-            <Route path='/kitchen' component={Kitchen} />
-            <Route path='/pending' component={Pending} /> 
+            <Route path='/kitchen' component={Kitchen} />           
             <Route path='/ready' component={Ready} />
             <Route path='/delivered' component={Delivered} />                   
-          </Switch>  
-        </div>
+          </Switch>       
       </Router>
     </div>
-  );
-}
+  )
+};
      

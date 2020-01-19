@@ -8,4 +8,4 @@ export default function Card (props) {
       <p>R$ {props.price},00</p>      
     </section>
   )
-}
+};
