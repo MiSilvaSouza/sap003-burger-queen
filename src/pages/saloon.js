@@ -119,7 +119,7 @@ import 'growl-alert/dist/growl-alert.css';
         <Button onClick={() => setMenu(allday)} value={'allday'} title={'ALMOÇO / JANTA'} />
       </nav>     
       <div className={css(styles.main)}>
-       <MenuCard class={css(styles.h3)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>   
+       <MenuCard class={css(styles.h3)} class1={css(styles.divmenu)} menu={menu} onClick={verifyOptions} className={css(styles.card, styles.hover)}/>   
         { modal.status ? (
         <div className={css(styles.modal)}>
           <h3>Opções</h3>
@@ -188,20 +188,27 @@ const styles = StyleSheet.create({
   },
   
   orders: {
-    marginTop: '60px',        
+    marginTop: '60px',
+    marginRight: '10px',        
     background: '#D0A991',
     height: '50%',
     border: '2px solid #3B1910'         
   },
 
   h3: {
-    marginTop: '25px',
+    marginTop: '10px',
     marginLeft: '10px',
+  },
+  divmenu: {
+    display: 'flex', 
+    flexWrap:'wrap',
+    width: '100%',
+    margin: '5px' 
   },
 
   card: {    
     width: '210px',    
-    marginTop: '10px', 
+    margin: '5px',
     padding: '30px',      
     textAlign: 'center',    
     border: 'none',  

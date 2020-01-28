@@ -8,7 +8,7 @@ export default function MenuCard (props) {
 
     <div>
       <h3 className={props.class}>Café da Manhã</h3>     
-        <section>      
+        <section className={props.class1}>      
           {props.menu.map((item) => 
             <div> 
               <Card name={item.name} price={item.price} className={props.className} onClick={() => props.onClick(item)} />
@@ -19,7 +19,7 @@ export default function MenuCard (props) {
     
     <div>
       <h3 className={props.class}>Hambúrgueres</h3>
-        <section>      
+        <section className={props.class1}>      
           {props.menu.map((item) => item.category === 'almoço-janta' ?
             <div> 
               <Card name={item.name} price={item.price} className={props.className} onClick={() => props.onClick(item)} />
@@ -27,7 +27,7 @@ export default function MenuCard (props) {
         </section>
 
       <h3 className={props.class}>Acompanhamento</h3>
-        <section>      
+        <section className={props.class1}>      
           {props.menu.map((item) => item.category === 'acompanhamento' ?
             <div> 
               <Card name={item.name} price={item.price} className={props.className} onClick={() => props.onClick(item)} />
@@ -35,7 +35,7 @@ export default function MenuCard (props) {
         </section>
 
       <h3 className={props.class}>Extras</h3>
-        <section>      
+        <section className={props.class1}>      
           {props.menu.map((item) => item.category === 'adicional' ?
             <div> 
               <Card name={item.name} price={item.price} className={props.className} onClick={() => props.onClick(item)} />
@@ -43,7 +43,7 @@ export default function MenuCard (props) {
         </section> 
 
       <h3 className={props.class}>Bebidas</h3>
-        <section>      
+        <section className={props.class1}>      
           {props.menu.map((item) => item.category === 'bebida' ?
             <div> 
               <Card name={item.name} price={item.price} className={props.className} onClick={() => props.onClick(item)} />
