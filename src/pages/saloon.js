@@ -155,13 +155,29 @@ const styles = StyleSheet.create({
   main: {
     display: 'flex',    
     justifyContent:'space-around',
+    '@media (min-width: 850px)': {      
+      marginRight: '160px',
+      marginLeft: '160px', 
+    },
+    '@media (min-width: 1025px)': {   
+      marginRight: '460px',
+      marginLeft: '460px', 
+    }
   },
 
   nav: {
     display: 'flex',
     justifyContent:'space-between',
     marginRight: '160px',
-    marginLeft: '160px', 
+    marginLeft: '160px',    
+    '@media (min-width: 850px)': {   
+      marginRight: '260px',
+      marginLeft: '260px', 
+    },  
+    '@media (min-width: 1025px)': {   
+      marginRight: '460px',
+      marginLeft: '460px', 
+    }
   },
 
   h1: {
@@ -202,7 +218,7 @@ const styles = StyleSheet.create({
   divmenu: {
     display: 'flex', 
     flexWrap:'wrap',
-    width: '100%',
+    width: '50%',
     margin: '5px' 
   },
 
