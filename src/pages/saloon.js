@@ -64,7 +64,8 @@ import 'growl-alert/dist/growl-alert.css';
   };
 
   const addOptions = () => {
-    const updateItem = {...modal.item, name: `${modal.item.name} ${option}`}    
+    const sanitizedOption = option.trim();
+    const updateItem = {...modal.item, name: `${modal.item.name} ${sanitizedOption}`}    
     order(updateItem);
     setModal({status: false});            
  };
@@ -81,11 +82,13 @@ import 'growl-alert/dist/growl-alert.css';
   };
 
   const sendOrder = () => {
+    const sanitizedName = name.trim();
+    const sanitizedTable = table.trim();
 
-    if (name === '') {
+    if (sanitizedName === '') {
       growl.error({text: 'Informe o nome do cliente', fadeAway: true, fadeAwayTimeout: 3000});
     }
-    else if (table === '') {
+    else if (sanitizedTable === '') {
       growl.error({text: 'Informe o número da mesa', fadeAway: true, fadeAwayTimeout: 3000});      
     }
     else if (!orders.length) {
@@ -93,8 +96,8 @@ import 'growl-alert/dist/growl-alert.css';
     } 
     else {
       const orderClient = {
-        client: name,
-        table: table,
+        client: sanitizedName,
+        table: sanitizedTable,
         order: orders,
         total: total,
         status: 'Pendente',
