@@ -1,16 +1,19 @@
-import * as firebase from 'firebase';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, serverTimestamp } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDrj7CfJcBRm3xE7rV1pExBI4t0zsubNxY",
-  authDomain: "burger-queen-56e28.firebaseapp.com",
-  databaseURL: "https://burger-queen-56e28.firebaseio.com",
-  projectId: "burger-queen-56e28",
-  storageBucket: "burger-queen-56e28.appspot.com",
-  messagingSenderId: "853382238093",
-  appId: "1:853382238093:web:9ec031331d1d63692c77c4",
-  measurementId: "G-1C264EH17N"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-export default firebase;
+export { db, serverTimestamp };
+export default app;

@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import firebase from '../utils/firebaseUtils';
+import { db, serverTimestamp } from '../utils/firebaseUtils';
+import { collection, getDocs, addDoc, orderBy, query } from 'firebase/firestore';
 import Input from '../components/input';
 import Button from '../components/button';
 import MenuCard from '../components/menucard';
@@ -18,26 +19,27 @@ import 'growl-alert/dist/growl-alert.css';
   const [option, setOption] = useState('');
   const [modal, setModal] = useState({status: false});
   
+  const breakfast = useMemo(() => data.filter(item => item.category === 'café'), [data]);
+  const allday = useMemo(() => data.filter(item => item.category !== 'café'), [data]);
+  
   useEffect(() => {
     setMenu([...breakfast]);            
-  }, [data]);
+  }, [breakfast]);
   
   useEffect(() => {
-    firebase.firestore().collection('menu').orderBy('name')
-      .get()
-      .then((snap) => {
-        const dataMenu = snap.docs.map((item) => ({
-          id: item.id,
-          count: 0,
-          ...item.data()
-        }))
-        setData(dataMenu);
-      })            
+    const fetchMenu = async () => {
+      const menuQuery = query(collection(db, 'menu'), orderBy('name'));
+      const snap = await getDocs(menuQuery);
+      const dataMenu = snap.docs.map((item) => ({
+        id: item.id,
+        count: 0,
+        ...item.data()
+      }))
+      setData(dataMenu);
+    };
+    fetchMenu();
   }, []);
   
-  const breakfast = data.filter(item => item.category === 'café');
-  const allday = data.filter(item => item.category !== 'café');
- 
 
   const order = (item) => {
 
@@ -62,7 +64,8 @@ import 'growl-alert/dist/growl-alert.css';
   };
 
   const addOptions = () => {
-    const updateItem = {...modal.item, name: `${modal.item.name} ${option}`}    
+    const sanitizedOption = option.trim();
+    const updateItem = {...modal.item, name: `${modal.item.name} ${sanitizedOption}`}    
     order(updateItem);
     setModal({status: false});            
  };
@@ -79,11 +82,13 @@ import 'growl-alert/dist/growl-alert.css';
   };
 
   const sendOrder = () => {
+    const sanitizedName = name.trim();
+    const sanitizedTable = table.trim();
 
-    if (name === '') {
+    if (sanitizedName === '') {
       growl.error({text: 'Informe o nome do cliente', fadeAway: true, fadeAwayTimeout: 3000});
     }
-    else if (table === '') {
+    else if (sanitizedTable === '') {
       growl.error({text: 'Informe o número da mesa', fadeAway: true, fadeAwayTimeout: 3000});      
     }
     else if (!orders.length) {
@@ -91,17 +96,17 @@ import 'growl-alert/dist/growl-alert.css';
     } 
     else {
       const orderClient = {
-        client: name,
-        table: table,
+        client: sanitizedName,
+        table: sanitizedTable,
         order: orders,
         total: total,
         status: 'Pendente',
-        time1: firebase.firestore.FieldValue.serverTimestamp(),
-        time2: firebase.firestore.FieldValue.serverTimestamp(),
+        time1: serverTimestamp(),
+        time2: serverTimestamp(),
         difftime: 0     
       }    
       
-      firebase.firestore().collection('orders').add(orderClient);
+      addDoc(collection(db, 'orders'), orderClient);
       growl.success({text: 'Pedido Enviado', fadeAway: true, fadeAwayTimeout: 3000});
       setName('');
       setTable('');
