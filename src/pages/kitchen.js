@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
-import firebase from '../utils/firebaseUtils';
+import { db, serverTimestamp } from '../utils/firebaseUtils';
+import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 
 import KitchenCard from '../components/kitchencard';
 import NavKitchen from '../components/navkitchen';
@@ -10,23 +11,23 @@ export default function Kitchen() {
   const [peding, setPeding] = useState([]);
 
   useEffect(() => {
-    firebase.firestore().collection('orders')
-      .where('status', '==', 'Pendente')     
-      .onSnapshot((snap) => {
-        const orderPeding = snap.docs.map((item) => ({
-          id: item.id,
-          ...item.data()
-        }))           
-        setPeding(orderPeding);
-      })
+    const q = query(collection(db, 'orders'), where('status', '==', 'Pendente'));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const orderPeding = snap.docs.map((item) => ({
+        id: item.id,
+        ...item.data()
+      }))           
+      setPeding(orderPeding);
+    });
+    return () => unsubscribe();
   }, []);
 
   const changeStatus = (item) => {    
-    firebase.firestore().collection('orders').doc(item.id)
-      .update({
-        status: 'Pronto',
-        time2: firebase.firestore.FieldValue.serverTimestamp(),        
-      })                    
+    const orderRef = doc(db, 'orders', item.id);
+    updateDoc(orderRef, {
+      status: 'Pronto',
+      time2: serverTimestamp(),        
+    });                    
   };
   
   return (

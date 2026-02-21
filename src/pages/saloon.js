@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import firebase from '../utils/firebaseUtils';
+import { db, serverTimestamp } from '../utils/firebaseUtils';
+import { collection, getDocs, addDoc, orderBy, query } from 'firebase/firestore';
 import Input from '../components/input';
 import Button from '../components/button';
 import MenuCard from '../components/menucard';
@@ -18,26 +19,27 @@ import 'growl-alert/dist/growl-alert.css';
   const [option, setOption] = useState('');
   const [modal, setModal] = useState({status: false});
   
-  useEffect(() => {
-    setMenu([...breakfast]);            
-  }, [data]);
-  
-  useEffect(() => {
-    firebase.firestore().collection('menu').orderBy('name')
-      .get()
-      .then((snap) => {
-        const dataMenu = snap.docs.map((item) => ({
-          id: item.id,
-          count: 0,
-          ...item.data()
-        }))
-        setData(dataMenu);
-      })            
-  }, []);
-  
   const breakfast = data.filter(item => item.category === 'café');
   const allday = data.filter(item => item.category !== 'café');
- 
+  
+  useEffect(() => {
+    setMenu([...breakfast]);            
+  }, [data, breakfast]);
+  
+  useEffect(() => {
+    const fetchMenu = async () => {
+      const menuQuery = query(collection(db, 'menu'), orderBy('name'));
+      const snap = await getDocs(menuQuery);
+      const dataMenu = snap.docs.map((item) => ({
+        id: item.id,
+        count: 0,
+        ...item.data()
+      }))
+      setData(dataMenu);
+    };
+    fetchMenu();
+  }, []);
+  
 
   const order = (item) => {
 
@@ -96,12 +98,12 @@ import 'growl-alert/dist/growl-alert.css';
         order: orders,
         total: total,
         status: 'Pendente',
-        time1: firebase.firestore.FieldValue.serverTimestamp(),
-        time2: firebase.firestore.FieldValue.serverTimestamp(),
+        time1: serverTimestamp(),
+        time2: serverTimestamp(),
         difftime: 0     
       }    
       
-      firebase.firestore().collection('orders').add(orderClient);
+      addDoc(collection(db, 'orders'), orderClient);
       growl.success({text: 'Pedido Enviado', fadeAway: true, fadeAwayTimeout: 3000});
       setName('');
       setTable('');
