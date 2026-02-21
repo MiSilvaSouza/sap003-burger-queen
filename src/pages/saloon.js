@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { db, serverTimestamp } from '../utils/firebaseUtils';
 import { collection, getDocs, addDoc, orderBy, query } from 'firebase/firestore';
@@ -19,12 +19,12 @@ import 'growl-alert/dist/growl-alert.css';
   const [option, setOption] = useState('');
   const [modal, setModal] = useState({status: false});
   
-  const breakfast = data.filter(item => item.category === 'café');
-  const allday = data.filter(item => item.category !== 'café');
+  const breakfast = useMemo(() => data.filter(item => item.category === 'café'), [data]);
+  const allday = useMemo(() => data.filter(item => item.category !== 'café'), [data]);
   
   useEffect(() => {
     setMenu([...breakfast]);            
-  }, [data, breakfast]);
+  }, [breakfast]);
   
   useEffect(() => {
     const fetchMenu = async () => {
